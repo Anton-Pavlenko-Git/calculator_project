@@ -1,15 +1,36 @@
-build/
-*/build/
+# Бинарные файлы и исполняемые файлы
+*.o
+*.a
+*.so
+*.out
+*.exe
+calculator
 
-CMakeCache.txt
+# Папки сборки
+build/
 CMakeFiles/
+cmake-build-*/
+
+# Файлы CMake
+CMakeCache.txt
 cmake_install.cmake
 Makefile
 *.cmake
 
-calculator
-*.exe
-*.out
+# ClangFormat (на будущее)
+.clang-format.cache
+.clang-tidy
 
+# Резервные копии и временные файлы
 *~
-*.bak
+*.swp
+*.swo
+.directory
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Логи и отладочная информация
+*.log
+*.dSYM/
