@@ -31,7 +31,7 @@ void print_help()
 
 void parse(int argc, char *argv[], Number &num)
 {
-    // Arguments sheck
+    // Arguments check
     if (argc < 4)
     {
         if (argc == 3 && (std::string(argv[2]) == "fact" || std::string(argv[2]) == "!"))
