@@ -10,7 +10,7 @@ include(FetchContent)
 
 FetchContent_Declare(
   math_lib
-  GIT_REPOSITORY https://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@github.com/Anton-Pavlenko-Git/math-library
+  GIT_REPOSITORY https://github.com/Anton-Pavlenko-Git/math-library
   GIT_TAG main
 )
 
