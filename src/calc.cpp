@@ -1,19 +1,17 @@
-#include <iostream>
-#include <string>
-#include <cstdlib> // for std::atof , std::atoi
 #include <cmath>
+#include <cstdlib>  // for std::atof , std::atoi
+#include <iostream>
 #include <math_utils/math_utils.hpp>
+#include <string>
 
-struct Number
-{
+struct Number {
     int first;
     int second;
     std::string operation;
     long long result;
 };
 
-void print_help()
-{
+void print_help() {
     std::cout << "Usage: ./calculator <num1> <operation> <num2>\n";
     std::cout << "Avaliable operations:\n";
     std::cout << " add	(+)\n";
@@ -29,17 +27,12 @@ void print_help()
     std::cout << " ./calculator 5 fact 0\n";
 }
 
-void parse(int argc, char *argv[], Number &num)
-{
+void parse(int argc, char *argv[], Number &num) {
     // Arguments check
-    if (argc < 4)
-    {
-        if (argc == 3 && (std::string(argv[2]) == "fact" || std::string(argv[2]) == "!"))
-        {
+    if(argc < 4) {
+        if(argc == 3 && (std::string(argv[2]) == "fact" || std::string(argv[2]) == "!")) {
             // OK call for factorial
-        }
-        else
-        {
+        } else {
             print_help();
             return;
         }
@@ -48,38 +41,24 @@ void parse(int argc, char *argv[], Number &num)
     // Parsing
     num.first = std::atoi(argv[1]);
     num.operation = argv[2];
-    num.second = (argc >= 4) ? std::atoi(argv[3]) : 0.0; // for factorial second argument doesn't matter
+    num.second = (argc >= 4) ? std::atoi(argv[3]) : 0.0;  // for factorial second argument doesn't matter
 }
 
-void calc(Number &num)
-{
-    if (num.operation == "add" || num.operation == "+")
-    {
+void calc(Number &num) {
+    if(num.operation == "add" || num.operation == "+") {
         num.result = math_utils::add(num.first, num.second);
-    }
-    else if (num.operation == "sub" || num.operation == "-")
-    {
+    } else if(num.operation == "sub" || num.operation == "-") {
         num.result = math_utils::subtract(num.first, num.second);
-    }
-    else if (num.operation == "mul" || num.operation == "*")
-    {
+    } else if(num.operation == "mul" || num.operation == "*") {
         num.result = math_utils::multiply(num.first, num.second);
-    }
-    else if (num.operation == "div" || num.operation == "/")
-    {
+    } else if(num.operation == "div" || num.operation == "/") {
         num.result = math_utils::divide(num.first, num.second);
-    }
-    else if (num.operation == "pow" || num.operation == "^")
-    {
+    } else if(num.operation == "pow" || num.operation == "^") {
         num.result = math_utils::power(num.first, num.second);
-    }
-    else if (num.operation == "fact" || num.operation == "!")
-    {
+    } else if(num.operation == "fact" || num.operation == "!") {
         num.result = math_utils::factorial(num.first);
-    }
-    else
-    {
-        if (num.operation != "0") // prevention of initial two-time print_help()
+    } else {
+        if(num.operation != "0")  // prevention of initial two-time print_help()
         {
             std::cout << "Error: unknown operation " << num.operation << ".\n";
             print_help();
@@ -88,13 +67,9 @@ void calc(Number &num)
     }
 }
 
-void printResult(Number &num)
-{
-    std::cout << "Result = " << num.result << std::endl;
-}
+void printResult(Number &num) { std::cout << "Result = " << num.result << std::endl; }
 
-void run(int argc, char *argv[])
-{
+void run(int argc, char *argv[]) {
     Number num = {0, 0, "0", 0};
     parse(argc, argv, num);
     calc(num);

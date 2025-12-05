@@ -2,9 +2,8 @@
 
 void run(int argc, char *argv[]);
 
-int main(int argc, char *argv[])
-{
-	run(argc, argv);
+int main(int argc, char *argv[]) {
+    run(argc, argv);
 
-	return 0;
+    return 0;
 }
