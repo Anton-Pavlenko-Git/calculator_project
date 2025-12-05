@@ -11,7 +11,10 @@ calculator
 
 *~
 *.bak
-.vscode/
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
 
 # Prerequisites
 *.d
@@ -54,3 +57,4 @@ calculator
 
 # debug information files
 *.dwo
+
