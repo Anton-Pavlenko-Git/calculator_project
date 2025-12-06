@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(Calculator VERSION 1.0.0 LANGUAGES CXX)
 
+add_executable(calculator
+    src/main.cpp
+    src/calc.cpp
+)
+
 set_target_properties(calculator PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
@@ -18,10 +23,5 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(math_lib)
-
-add_executable(calculator
-    src/main.cpp
-    src/calc.cpp
-)
 
 target_link_libraries(calculator math_lib)

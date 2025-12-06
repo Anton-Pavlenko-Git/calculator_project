@@ -27,7 +27,7 @@ void print_help() {
     std::cout << " ./calculator 5 fact 0\n";
 }
 
-void parse(int argc, char *argv[], Number &num) {
+void parse(int argc, char* argv[], Number& num) {
     // Arguments check
     if(argc < 4) {
         if(argc == 3 && (std::string(argv[2]) == "fact" || std::string(argv[2]) == "!")) {
@@ -44,7 +44,7 @@ void parse(int argc, char *argv[], Number &num) {
     num.second = (argc >= 4) ? std::atoi(argv[3]) : 0.0;  // for factorial second argument doesn't matter
 }
 
-void calc(Number &num) {
+void calc(Number& num) {
     if(num.operation == "add" || num.operation == "+") {
         num.result = math_utils::add(num.first, num.second);
     } else if(num.operation == "sub" || num.operation == "-") {
@@ -67,9 +67,9 @@ void calc(Number &num) {
     }
 }
 
-void printResult(Number &num) { std::cout << "Result = " << num.result << std::endl; }
+void printResult(Number& num) { std::cout << "Result = " << num.result << std::endl; }
 
-void run(int argc, char *argv[]) {
+void run(int argc, char* argv[]) {
     Number num = {0, 0, "0", 0};
     parse(argc, argv, num);
     calc(num);
