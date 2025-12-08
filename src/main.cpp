@@ -1,9 +1,9 @@
 #include <iostream>
 
-void run(int argc, char* argv[]);
+#include "header.hpp"
 
 int main(int argc, char* argv[]) {
-    run(argc, argv);
+    runCalculator(argc, argv);
 
     return 0;
 }
