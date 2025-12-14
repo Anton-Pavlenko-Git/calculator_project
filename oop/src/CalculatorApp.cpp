@@ -63,15 +63,3 @@ void CalculatorApp::printHelp() {
     std::cout << "For factorial: {\"operand1\": 5, \"operation\": \"!\"}" << std::endl;
     std::cout << "Commands: help, exit" << std::endl;
 }
-/*
-    std::cout << "JSON Calculator Help:" << std::endl;
-    std::cout << "Enter JSON in format:" << std::endl;
-    std::cout << R"({
-  "operand1": 5,
-  "operation": "+",
-  "operand2": 3
-})" << std::endl;
-    std::cout << "\nAvailable operations: +, -, *, /, ^, !" << std::endl;
-    std::cout << "For factorial, omit 'operand2'" << std::endl;
-}
-*/
