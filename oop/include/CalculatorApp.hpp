@@ -4,13 +4,11 @@
 #include <string>
 
 #include "CalculatorEngine.hpp"
-#include "InputParser.hpp"
 #include "Logger.hpp"
 
 class CalculatorApp {
    private:
     std::shared_ptr<Logger> logger_;
-    InputParser parser_;
     CalculatorEngine engine_;
 
    public:

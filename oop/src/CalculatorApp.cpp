@@ -19,17 +19,12 @@ void CalculatorApp::run() {
 
     std::string line;
     while(true) {
-        std::cout << "\nEnter JSON or 'exit': ";
+        std::cout << "\nEnter JSON or 'help'/'exit': ";
 
-        if(!std::getline(std::cin, line)) {
-            break;  // Ctrl+D
-        }
-
+        if(!std::getline(std::cin, line)) break;  // Ctrl+D
         if(line.empty()) continue;
 
-        if(line == "exit" || line == "quit") {
-            break;
-        }
+        if(line == "exit" || line == "quit") break;
 
         if(line == "help") {
             printHelp();
@@ -49,11 +44,8 @@ void CalculatorApp::run() {
 }
 
 void CalculatorApp::processInput(const std::string& jsonInput) {
-    // logger_->debug("Processing input: " + jsonInput);
-
     // 1. Парсим JSON в CalculationRequest
     CalculationRequest request = CalculationRequest::fromJson(jsonInput);
-    // logger_->debug("Parsed request: " + request.toJson());
 
     // 2. Выполняем вычисление
     int result = engine_.calculate(request);
@@ -66,6 +58,12 @@ void CalculatorApp::processInput(const std::string& jsonInput) {
 }
 
 void CalculatorApp::printHelp() {
+    std::cout << "\nFormat: {\"operand1\": 5, \"operation\": \"+\", \"operand2\": 3}" << std::endl;
+    std::cout << "Operations: +  -  *  /  ^  !" << std::endl;
+    std::cout << "For factorial: {\"operand1\": 5, \"operation\": \"!\"}" << std::endl;
+    std::cout << "Commands: help, exit" << std::endl;
+}
+/*
     std::cout << "JSON Calculator Help:" << std::endl;
     std::cout << "Enter JSON in format:" << std::endl;
     std::cout << R"({
@@ -76,3 +74,4 @@ void CalculatorApp::printHelp() {
     std::cout << "\nAvailable operations: +, -, *, /, ^, !" << std::endl;
     std::cout << "For factorial, omit 'operand2'" << std::endl;
 }
+*/

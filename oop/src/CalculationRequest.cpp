@@ -6,6 +6,7 @@
 
 using json = nlohmann::json;
 
+// Конструктор
 CalculationRequest::CalculationRequest(int op1, std::string op, std::optional<int> op2)
     : operand1_(op1), operation_(std::move(op)), operand2_(op2) {}
 

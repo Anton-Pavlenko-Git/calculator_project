@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
-project(Calculator VERSION 1.0.0 LANGUAGES CXX)
+project(Calculator VERSION 1.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 add_executable(calculator
     main.cpp
     src/CalculationRequest.cpp
     src/CalculatorEngine.cpp
-    src/InputParser.cpp
+    #src/InputParser.cpp
     src/Logger.cpp
     src/CalculatorApp.cpp
 )
