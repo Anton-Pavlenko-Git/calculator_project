@@ -4,7 +4,7 @@
 #include "include/CalculatorApp.hpp"
 #include "include/Logger.hpp"
 
-int main(int argc, char* argv[]) {
+int main() {
     try {
         // 1. Создаем логгер
         auto logger = Logger::create();
