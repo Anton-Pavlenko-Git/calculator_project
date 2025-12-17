@@ -23,8 +23,4 @@ class CalculatorApp {
 
     // Вспомогательный метод
     static void printHelp();
-
-    // private:
-    //  Приватные методы для внутренней организации
-    // void processCalculation(const CalculationRequest& request);
 };
