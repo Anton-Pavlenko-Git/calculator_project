@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
 
-#include "include/CalculatorApp.hpp"
-#include "include/Logger.hpp"
+#include "CalculatorApp.hpp"
+#include "Logger.hpp"
 
 int main() {
     try {

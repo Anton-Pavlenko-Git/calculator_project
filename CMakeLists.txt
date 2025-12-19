@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
-project(Calculator VERSION 1.0.0 LANGUAGES CXX)
+project(Calculator VERSION 1.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 add_executable(calculator
     src/main.cpp
-    src/calc.cpp
+    src/CalculationRequest.cpp
+    src/CalculatorEngine.cpp
+    #src/InputParser.cpp
+    src/Logger.cpp
+    src/CalculatorApp.cpp
 )
 
 set_target_properties(calculator PROPERTIES
@@ -14,6 +21,7 @@ set_target_properties(calculator PROPERTIES
 
 add_compile_options(-Wall -Wpedantic -Werror)
 
+# 0. My lib
 include(FetchContent)
 
 FetchContent_Declare(
@@ -23,30 +31,46 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(math_lib)
 
-# 1. nlohmann/json (рекомендуемая версия 3.11.3, как и было в задании)
+# 1. nlohmann/json
 FetchContent_Declare(
-  json
+  nlohmann_json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
   GIT_TAG v3.12.0
   GIT_SHALLOW TRUE
 )
 
-# 2. spdlog (можно взять свежую 1.14.1 или актуальную 1.16.0)
+# 2. spdlog
 FetchContent_Declare(
   spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG v1.16.0 #[citation:2] #v1.14.1
+  GIT_TAG v1.16.0
   GIT_SHALLOW TRUE
 )
 
-# 3. GoogleTest (используйте v1.14.0 для C++14+)
+# 3. GoogleTest
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG v1.17.0 #[citation:3][citation:5]
+  GIT_TAG v1.17.0
   GIT_SHALLOW TRUE
 )
 
-FetchContent_MakeAvailable(json spdlog googletest)
+FetchContent_MakeAvailable(math_lib nlohmann_json spdlog googletest)
 
-target_link_libraries(calculator math_lib)
+target_include_directories(calculator PRIVATE
+  include
+  ${math_lib_SOURCE_DIR}/include
+)
+
+target_link_libraries(calculator PRIVATE
+  nlohmann_json::nlohmann_json
+  spdlog::spdlog
+)
+
+# Включаем тестирование
+enable_testing()
+
+# Подключаем тесты если GoogleTest доступен
+if(TARGET GTest::gtest_main)
+    add_subdirectory(tests)
+endif()
