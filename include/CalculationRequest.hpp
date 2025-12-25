@@ -11,14 +11,14 @@ class CalculationRequest {
     std::optional<int> operand2_;
 
    public:
-    CalculationRequest(int op1, std::string op, std::optional<int> op2 = std::nullopt);
+    CalculationRequest(int op1, std::string oper, std::optional<int> op2 = std::nullopt);
 
-    int getFirstOperand() const { return operand1_; }
-    std::string getOperation() const { return operation_; }
-    std::optional<int> getSecondOperand() const { return operand2_; }
+    [[nodiscard]] int getFirstOperand() const { return operand1_; }
+    [[nodiscard]] std::string getOperation() const { return operation_; }
+    [[nodiscard]] std::optional<int> getSecondOperand() const { return operand2_; }
 
     static CalculationRequest fromJson(const std::string& jsonStr);
-    static CalculationRequest fromJson(const nlohmann::json& j);
-    std::string toJson() const;
-    nlohmann::json toJsonObject() const;
+    static CalculationRequest fromJson(const nlohmann::json& jsonObj);
+    [[nodiscard]] std::string toJson() const;
+    [[nodiscard]] nlohmann::json toJsonObject() const;
 };

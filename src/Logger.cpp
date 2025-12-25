@@ -9,8 +9,8 @@ std::shared_ptr<Logger> Logger::create() { return std::make_shared<SpdLogger>();
 // Коструктор SpdLogger
 SpdLogger::SpdLogger() {
     // Создаем логгер с цветным выводом в консоль
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    auto logger = std::make_shared<spdlog::logger>("calculator", console_sink);
+    auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto logger = std::make_shared<spdlog::logger>("calculator", consoleSink);
 
     // Настройка формата: [время] [уровень] сообщение
     logger->set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");

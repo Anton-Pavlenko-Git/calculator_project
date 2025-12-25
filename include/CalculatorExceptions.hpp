@@ -20,7 +20,7 @@ class NegativeFactorialException : public MathException {
 
 class InvalidOperationException : public MathException {
    public:
-    InvalidOperationException(const std::string& op) : MathException("Invalid operation" + op) {}
+    explicit InvalidOperationException(const std::string& oper) : MathException("Invalid operation" + oper) {}
 };
 
 class InvalidInputException : public std::runtime_error {
