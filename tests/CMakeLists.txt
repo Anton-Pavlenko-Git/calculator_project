@@ -5,7 +5,7 @@ add_executable(calculator_tests
     calculator_test.cpp
     ${CMAKE_SOURCE_DIR}/src/CalculationRequest.cpp
     ${CMAKE_SOURCE_DIR}/src/CalculatorEngine.cpp
-    #${CMAKE_SOURCE_DIR}/src/InputParser.cpp
+    ${CMAKE_SOURCE_DIR}/src/CalculatorExceptions.cpp
     ${CMAKE_SOURCE_DIR}/src/Logger.cpp
 )
 

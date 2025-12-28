@@ -7,8 +7,12 @@
 using json = nlohmann::json;
 
 // Конструктор
-CalculationRequest::CalculationRequest(int op1, std::string oper, std::optional<int> op2)
+CalculationRequest::CalculationRequest(int op1, std::string oper, std::optional<int> op2) noexcept
     : operand1_(op1), operation_(std::move(oper)), operand2_(op2) {}
+
+int CalculationRequest::getFirstOperand() const noexcept { return operand1_; }
+std::string CalculationRequest::getOperation() const noexcept { return operation_; }
+std::optional<int> CalculationRequest::getSecondOperand() const noexcept { return operand2_; }
 
 // Парсинг из JSON строки
 CalculationRequest CalculationRequest::fromJson(const std::string& jsonStr) {
@@ -36,7 +40,7 @@ CalculationRequest CalculationRequest::fromJson(const nlohmann::json& jsonObj) {
         operand2 = jsonObj["operand2"].get<int>();
     }
 
-    return {operand1, operation, operand2};
+    return CalculationRequest{operand1, operation, operand2};
 }
 
 // Преобразуем в JSON строку

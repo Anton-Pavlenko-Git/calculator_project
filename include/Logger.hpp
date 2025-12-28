@@ -6,13 +6,13 @@
 class Logger {
    public:
     // Виртуальный деструктор для полиморфизма
-    virtual ~Logger() = default;
+    virtual ~Logger() noexcept = default;
 
     // Запрещаем копирование и перемещение для интерфейса
-    Logger(const Logger&) = delete;
-    Logger& operator=(const Logger&) = delete;
-    Logger(Logger&&) = delete;
-    Logger& operator=(Logger&&) = delete;
+    Logger(const Logger&) noexcept = delete;
+    Logger& operator=(const Logger&) noexcept = delete;
+    Logger(Logger&&) noexcept = delete;
+    Logger& operator=(Logger&&) noexcept = delete;
 
     // Интерфейс логирования
     virtual void info(const std::string& message) = 0;
@@ -24,7 +24,7 @@ class Logger {
 
    protected:
     // Защищенный конструктор по умолчанию
-    Logger() = default;
+    Logger() noexcept = default;
 };
 
 // Реализация для spdlog
@@ -33,10 +33,10 @@ class SpdLogger : public Logger {
     SpdLogger();
     ~SpdLogger() override;
 
-    SpdLogger(const SpdLogger&) = delete;
-    SpdLogger& operator=(const SpdLogger&) = delete;
-    SpdLogger(SpdLogger&&) = delete;
-    SpdLogger& operator=(SpdLogger&&) = delete;
+    SpdLogger(const SpdLogger&) noexcept = delete;
+    SpdLogger& operator=(const SpdLogger&) noexcept = delete;
+    SpdLogger(SpdLogger&&) noexcept = delete;
+    SpdLogger& operator=(SpdLogger&&) noexcept = delete;
 
     void info(const std::string& message) override;
     void error(const std::string& message) override;

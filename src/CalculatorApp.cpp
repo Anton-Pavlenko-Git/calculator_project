@@ -54,7 +54,7 @@ void CalculatorApp::processInput(const std::string& jsonInput) {
     CalculationRequest const request = CalculationRequest::fromJson(jsonInput);
 
     // 2. Выполняем вычисление
-    long long const result = engine_.calculate(request);
+    int const result = engine_.calculate(request);
 
     // 3. Выводим результат
     std::cout << "Result: " << result << '\n';
@@ -63,7 +63,7 @@ void CalculatorApp::processInput(const std::string& jsonInput) {
     logger_->info("Calculation successful: " + request.toJson() + " = " + std::to_string(result));
 }
 
-void CalculatorApp::printHelp() {
+void CalculatorApp::printHelp() noexcept {
     std::cout << "\nFormat: {\"operand1\": 5, \"operation\": \"+\", \"operand2\": 3}" << '\n';
     std::cout << "Operations: +  -  *  /  ^  !" << '\n';
     std::cout << R"(For factorial: {"operand1": 5, "operation": "!"})" << '\n';

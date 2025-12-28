@@ -22,5 +22,11 @@ class CalculatorApp {
     void processInput(const std::string& jsonInput);
 
     // Вспомогательный метод
-    static void printHelp();
+    static void printHelp() noexcept;
+
+    ~CalculatorApp() noexcept = default;
+    CalculatorApp(const CalculatorApp&) noexcept = default;
+    CalculatorApp& operator=(const CalculatorApp&) noexcept = default;
+    CalculatorApp(CalculatorApp&&) noexcept = default;
+    CalculatorApp& operator=(CalculatorApp&&) noexcept = default;
 };

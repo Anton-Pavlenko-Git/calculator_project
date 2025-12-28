@@ -6,12 +6,11 @@ class CalculatorEngine {
    public:
     int calculate(const CalculationRequest& request) const;
 
-    // Правило пяти
-    CalculatorEngine() = default;
-    ~CalculatorEngine() = default;
+    CalculatorEngine() noexcept = default;
+    ~CalculatorEngine() noexcept = default;
 
-    CalculatorEngine(const CalculatorEngine&) = default;
-    CalculatorEngine& operator=(const CalculatorEngine&) = default;
-    CalculatorEngine(CalculatorEngine&&) = default;
-    CalculatorEngine& operator=(CalculatorEngine&&) = default;
+    CalculatorEngine(const CalculatorEngine&) noexcept = default;
+    CalculatorEngine& operator=(const CalculatorEngine&) noexcept = default;
+    CalculatorEngine(CalculatorEngine&&) noexcept = default;
+    CalculatorEngine& operator=(CalculatorEngine&&) noexcept = default;
 };

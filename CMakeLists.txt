@@ -12,6 +12,7 @@ add_executable(calculator
     src/CalculatorEngine.cpp
     src/Logger.cpp
     src/CalculatorApp.cpp
+    src/CalculatorExceptions.cpp
 )
 
 set_target_properties(calculator PROPERTIES
