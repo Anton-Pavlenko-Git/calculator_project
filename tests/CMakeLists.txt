@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 add_executable(calculator_tests
     calculator_test.cpp
     ${CMAKE_SOURCE_DIR}/src/CalculationRequest.cpp
+    ${CMAKE_SOURCE_DIR}/src/CalculatorApp.cpp
     ${CMAKE_SOURCE_DIR}/src/CalculatorEngine.cpp
     ${CMAKE_SOURCE_DIR}/src/CalculatorExceptions.cpp
     ${CMAKE_SOURCE_DIR}/src/Logger.cpp

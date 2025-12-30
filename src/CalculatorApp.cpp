@@ -49,18 +49,20 @@ void CalculatorApp::run() {
     std::cout << "Goodbye!" << '\n';
 }
 
-void CalculatorApp::processInput(const std::string& jsonInput) {
+std::string CalculatorApp::calculate(const std::string& jsonInput) {
     // 1. Парсим JSON в CalculationRequest
     CalculationRequest const request = CalculationRequest::fromJson(jsonInput);
-
     // 2. Выполняем вычисление
     int const result = engine_.calculate(request);
+    // 3. Возвращаем результат в processInput как строку
+    return std::to_string(result);
+}
 
-    // 3. Выводим результат
+void CalculatorApp::processInput(const std::string& jsonInput) {
+    std::string result = calculate(jsonInput);
     std::cout << "Result: " << result << '\n';
 
-    // 4. Логируем успех
-    logger_->info("Calculation successful: " + request.toJson() + " = " + std::to_string(result));
+    logger_->info("Calculation successful: " + jsonInput + " = " + result);
 }
 
 void CalculatorApp::printHelp() noexcept {

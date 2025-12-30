@@ -19,6 +19,7 @@ class CalculatorApp {
     void run();
 
     // Обработка одного вычисления
+    std::string calculate(const std::string& jsonInput);
     void processInput(const std::string& jsonInput);
 
     // Вспомогательный метод

@@ -1,58 +1,62 @@
 #include <gtest/gtest.h>
 
-#include "CalculationRequest.hpp"
-#include "CalculatorEngine.hpp"
+#include <iostream>
+#include <memory>
+
+#include "CalculatorApp.hpp"
 #include "CalculatorExceptions.hpp"
+/*
+// Временный логгер, который пишет в stdout (для тестов)
+class CoutLogger : public Logger {
+   public:
+    void info(const std::string& message) override { std::cout << "[INFO] " << message << '\n'; }
 
+    void error(const std::string& message) override { std::cout << "[ERROR] " << message << '\n'; }
+
+    void debug(const std::string& message) override { std::cout << "[DEBUG] " << message << '\n'; }
+};
+*/
 // Тест 1: Парсинг JSON
-TEST(CalculationRequestTest, ParseValidJson) {
-    std::string json = R"({"operand1": 5, "operation": "+", "operand2": 3})";
-    CalculationRequest req = CalculationRequest::fromJson(json);
+TEST(CalculatorAppTest, BasicOperations) {
+    auto logger = Logger::create();
+    CalculatorApp app(logger);
 
-    EXPECT_EQ(req.getFirstOperand(), 5);
-    EXPECT_EQ(req.getOperation(), "+");
-    EXPECT_TRUE(req.getSecondOperand().has_value());
-    EXPECT_EQ(req.getSecondOperand().value(), 3);
+    EXPECT_EQ(app.calculate(R"({"operand1": 5, "operation": "+", "operand2": 3})"), "8");
+    EXPECT_EQ(app.calculate(R"({"operand1": 5, "operation": "!"})"), "120");
 }
 
 // Тест 2: Парсинг факториала (без operand2)
-TEST(CalculationRequestTest, ParseFactorialJson) {
-    std::string json = R"({"operand1": 5, "operation": "!"})";
-    CalculationRequest req = CalculationRequest::fromJson(json);
+TEST(CalculatorAppTest, ParseFactorialJson) {
+    auto logger = Logger::create();
+    CalculatorApp app(logger);
 
-    EXPECT_EQ(req.getFirstOperand(), 5);
-    EXPECT_EQ(req.getOperation(), "!");
-    EXPECT_FALSE(req.getSecondOperand().has_value());  // Должно быть nullopt
+    EXPECT_EQ(app.calculate(R"({"operand1": 5, "operation": "!"})"), "120");
 }
 
-// Тест 3: Вычисление операций
-TEST(CalculatorEngineTest, BasicOperations) {
-    CalculatorEngine engine;
+// Тест 3: Исключения
+TEST(CalculatorAppTest, DivisionByZeroThrows) {
+    auto logger = Logger::create();
+    CalculatorApp app(logger);
 
-    CalculationRequest add(5, "+", 3);
-    EXPECT_EQ(engine.calculate(add), 8);
-
-    CalculationRequest mul(5, "*", 3);
-    EXPECT_EQ(engine.calculate(mul), 15);
-
-    CalculationRequest fact(5, "!");
-    EXPECT_EQ(engine.calculate(fact), 120);
+    EXPECT_THROW(app.calculate(R"({"operand1": 5, "operation": "/", "operand2": 0})"), DivisionByZeroException);
 }
 
-// Тест 4: Исключения
-TEST(CalculatorEngineTest, DivisionByZeroThrows) {
-    CalculatorEngine engine;
-    CalculationRequest div(5, "/", 0);
+// Тест 4: Неверная операция
+TEST(CalculatorAppTest, InvalidOperationThrows) {
+    auto logger = Logger::create();
+    CalculatorApp app(logger);
 
-    EXPECT_THROW(engine.calculate(div), DivisionByZeroException);
+    EXPECT_THROW(
+        app.calculate(R"({"operand1": 5, "operation": "invalid_op", "operand2": 3})"), InvalidOperationException
+    );
 }
 
-// Тест 5: Неверная операция
-TEST(CalculatorEngineTest, InvalidOperationThrows) {
-    CalculatorEngine engine;
-    CalculationRequest invalid(5, "invalid_op", 3);
+// Тест 5: Невалидный JSON
+TEST(CalculatorAppTest, InvalidJsonThrows) {
+    auto logger = Logger::create();
+    CalculatorApp app(logger);
 
-    EXPECT_THROW(engine.calculate(invalid), InvalidOperationException);
+    EXPECT_THROW(app.calculate("not a json"), InvalidInputException);
 }
 
 int main(int argc, char* argv[]) {
