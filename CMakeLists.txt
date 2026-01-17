@@ -1,10 +1,22 @@
 cmake_minimum_required(VERSION 3.20)
-project(Calculator VERSION 1.1.0 LANGUAGES CXX)
+project(Calculator VERSION 1.2.0 LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+message(STATUS "Building tests with GoogleTest")
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+
+find_package(PostgreSQL REQUIRED)
+
+if(NOT PostgreSQL_FOUND)
+    message(FATAL_ERROR "PostgreSQL not found!")
+else()
+    message(STATUS "PostgreSQL found:")
+    message(STATUS "  Include dirs: ${PostgreSQL_INCLUDE_DIRS}")
+    message(STATUS "  Libraries: ${PostgreSQL_LIBRARIES}")
+endif()
 
 add_executable(calculator
     src/main.cpp
@@ -32,7 +44,6 @@ FetchContent_Declare(
   GIT_TAG main
   GIT_SHALLOW TRUE
 )
-#FetchContent_MakeAvailable(math_lib)
 
 # 1. nlohmann/json
 FetchContent_Declare(
@@ -62,30 +73,91 @@ FetchContent_MakeAvailable(math_lib nlohmann_json spdlog googletest)
 
 target_include_directories(calculator PRIVATE
   include
-  #${math_lib_SOURCE_DIR}/include
+  src 
+  ${PostgreSQL_INCLUDE_DIRS}
+  ${math_lib_SOURCE_DIR}/include
 )
 
 target_link_libraries(calculator PRIVATE
   nlohmann_json::nlohmann_json
   spdlog::spdlog
   math_utils
+  ${PostgreSQL_LIBRARIES}
 )
 
 # Включаем тестирование
 enable_testing()
 
-# Подключаем тесты если GoogleTest доступен
 if(TARGET GTest::gtest_main)
-    add_subdirectory(tests)
+    message(STATUS "Adding CalculatorApp tests...")
+    
+    add_executable(test_calculator_app
+        tests/test_calculator_app.cpp
+        src/CalculationRequest.cpp
+        src/CalculatorEngine.cpp
+        src/Logger.cpp
+        src/CalculatorApp.cpp
+        src/CalculatorExceptions.cpp
+    )
+    
+    set_target_properties(test_calculator_app PROPERTIES
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+    )
+    
+    target_include_directories(test_calculator_app PRIVATE
+        include
+        src
+        ${PostgreSQL_INCLUDE_DIRS}
+        ${math_lib_SOURCE_DIR}/include
+    )
+    
+    target_link_libraries(test_calculator_app PRIVATE
+        GTest::gtest_main
+        ${PostgreSQL_LIBRARIES}
+        nlohmann_json::nlohmann_json
+        spdlog::spdlog
+        math_utils
+    )
+    
+    add_test(NAME CalculatorAppTest COMMAND test_calculator_app)
 endif()
 
-# clang-tidy
-#if(USE_CLANG_TIDY)
-#    find_program(CLANG_TIDY_PATH NAMES clang-tidy-21 REQUIRED)
-#    message(STATUS "Found clang-tidy: ${CLANG_TIDY_PATH}")
-#    set(CLANG_TIDY_COMMAND ${CLANG_TIDY_PATH} "-config-file=${CMAKE_SOURCE_DIR}/.clang-tidy")
-#    set_target_properties(${Calculator} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
-#endif()
+
+# Добавляем бенчмарк производительности
+#add_executable(performance_benchmark
+#    tests/performance_benchmark.cpp
+#    src/CalculationRequest.cpp
+#    src/CalculatorEngine.cpp
+#   src/Logger.cpp
+#    src/CalculatorApp.cpp
+#    src/CalculatorExceptions.cpp
+#)
+
+#set_target_properties(performance_benchmark PROPERTIES
+#    CXX_STANDARD 20
+#    CXX_STANDARD_REQUIRED ON
+#    CXX_EXTENSIONS OFF
+#)
+
+#target_include_directories(performance_benchmark PRIVATE
+#    include
+#    src
+#    ${PostgreSQL_INCLUDE_DIRS}
+#    ${math_lib_SOURCE_DIR}/include
+#)
+
+#target_link_libraries(performance_benchmark PRIVATE
+#    GTest::gtest_main
+#    ${PostgreSQL_LIBRARIES}
+#    nlohmann_json::nlohmann_json
+#    spdlog::spdlog
+#    math_utils
+#)
+
+#add_test(NAME PerformanceBenchmark COMMAND performance_benchmark)
+
 
 # clang-tidy
 option(USE_CLANG_TIDY "Enable clang-tidy checks" ON)

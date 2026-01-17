@@ -9,11 +9,13 @@
 class CalculatorApp {
    private:
     std::shared_ptr<Logger> logger_;
-    CalculatorEngine engine_;
+    std::unique_ptr<CalculatorEngine> engine_;
 
    public:
     // Констуктор с внедрением зависимости
     explicit CalculatorApp(std::shared_ptr<Logger> logger);
+
+    explicit CalculatorApp(std::shared_ptr<Logger> logger, const std::string& databaseConnectionString);
 
     // Основной метод запуска приложения
     void run();
@@ -24,10 +26,11 @@ class CalculatorApp {
 
     // Вспомогательный метод
     static void printHelp() noexcept;
+    void printStats() const;
 
     ~CalculatorApp() noexcept = default;
-    CalculatorApp(const CalculatorApp&) noexcept = default;
-    CalculatorApp& operator=(const CalculatorApp&) noexcept = default;
+    CalculatorApp(const CalculatorApp&) noexcept = delete;
+    CalculatorApp& operator=(const CalculatorApp&) noexcept = delete;
     CalculatorApp(CalculatorApp&&) noexcept = default;
     CalculatorApp& operator=(CalculatorApp&&) noexcept = default;
 };

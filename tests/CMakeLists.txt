@@ -13,7 +13,9 @@ add_executable(calculator_tests
 # Подключаем заголовки
 target_include_directories(calculator_tests PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
     ${math_lib_SOURCE_DIR}/include
+    ${PostgreSQL_INCLUDE_DIRS}
 )
 
 # Линкуем библиотеки
@@ -21,6 +23,8 @@ target_link_libraries(calculator_tests PRIVATE
     nlohmann_json::nlohmann_json
     spdlog::spdlog
     GTest::gtest_main
+    ${PostgreSQL_LIBRARIES}
+    pq
 )
 
 # Настройка C++20

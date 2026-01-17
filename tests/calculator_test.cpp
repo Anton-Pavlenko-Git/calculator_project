@@ -5,17 +5,7 @@
 
 #include "CalculatorApp.hpp"
 #include "CalculatorExceptions.hpp"
-/*
-// Временный логгер, который пишет в stdout (для тестов)
-class CoutLogger : public Logger {
-   public:
-    void info(const std::string& message) override { std::cout << "[INFO] " << message << '\n'; }
 
-    void error(const std::string& message) override { std::cout << "[ERROR] " << message << '\n'; }
-
-    void debug(const std::string& message) override { std::cout << "[DEBUG] " << message << '\n'; }
-};
-*/
 // Тест 1: Парсинг JSON
 TEST(CalculatorAppTest, BasicOperations) {
     auto logger = Logger::create();
