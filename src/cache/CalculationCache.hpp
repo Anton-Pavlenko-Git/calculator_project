@@ -1,35 +1,10 @@
 #pragma once
 
-#include <functional>
-#include <iostream>
 #include <optional>
 #include <string>
-#include <tuple>
 #include <unordered_map>
 
-// Ключ для кеша вычислений
-struct CacheKey {
-    int operand1;
-    std::string operation;
-    std::optional<int> operand2;
-
-    // Для использования в unordered_map нужны операторы сравнения и хеш-функция
-    bool operator==(const CacheKey& other) const {
-        return operand1 == other.operand1 && operation == other.operation && operand2 == other.operand2;
-    }
-};
-
-// Хеш-функция для CacheKey
-struct CacheKeyHash {
-    std::size_t operator()(const CacheKey& key) const {
-        std::size_t h1 = std::hash<int>{}(key.operand1);
-        std::size_t h2 = std::hash<std::string>{}(key.operation);
-        std::size_t h3 = key.operand2.has_value() ? std::hash<int>{}(*key.operand2) : std::hash<int>{}(0);
-
-        // Комбинируем хеши (используем boost::hash_combine алгоритм)
-        return h1 ^ (h2 << 1) ^ (h3 << 2);
-    }
-};
+#include "Logger.hpp"
 
 /*
  * Кеш вычислений в памяти
@@ -39,15 +14,29 @@ struct CacheKeyHash {
  */
 class CalculationCache {
    private:
-    std::unordered_map<CacheKey, int, CacheKeyHash> cache_;
+    std::unordered_map<std::string, int> cache_;
+    std::shared_ptr<Logger> logger_;
+
+    // Генерация строкового ключа
+    static std::string makeKey(int operand1, const std::string& operation, std::optional<int> operand2) {
+        std::string key = std::to_string(operand1) + operation;
+        if(operand2.has_value()) {
+            key += std::to_string(operand2.value());
+        }
+        return key;
+    }
 
    public:
-    explicit CalculationCache() = default;
+    explicit CalculationCache(std::shared_ptr<Logger> logger = nullptr) : logger_(std::move(logger)) {}
 
     // Добавляет результат в кеш
     void put(int operand1, const std::string& operation, std::optional<int> operand2, int result) {
-        CacheKey key{operand1, operation, operand2};
+        std::string key = makeKey(operand1, operation, operand2);
         cache_[key] = result;
+
+        if(logger_) {
+            logger_->debug("Cache put: " + key + " = " + std::to_string(result));
+        }
     }
 
     /*
@@ -55,30 +44,44 @@ class CalculationCache {
      * optional с результатом если найден, иначе nullopt
      */
     std::optional<int> get(int operand1, const std::string& operation, std::optional<int> operand2) const {
-        CacheKey key{operand1, operation, operand2};
+        std::string key = makeKey(operand1, operation, operand2);
         auto it = cache_.find(key);
 
         if(it != cache_.end()) {
+            if(logger_) {
+                logger_->debug("Cache hit: " + key + " = " + std::to_string(it->second));
+            }
             return it->second;
         }
-
+        if(logger_) {
+            logger_->debug("Cache miss: " + key);
+        }
         return std::nullopt;
     }
 
     // Проверяет наличие результата в кеше
     bool contains(int operand1, const std::string& operation, std::optional<int> operand2) const {
-        CacheKey key{operand1, operation, operand2};
+        std::string key = makeKey(operand1, operation, operand2);
         return cache_.find(key) != cache_.end();
     }
 
     // Удаляет результат из кеша
     void remove(int operand1, const std::string& operation, std::optional<int> operand2) {
-        CacheKey key{operand1, operation, operand2};
+        std::string key = makeKey(operand1, operation, operand2);
         cache_.erase(key);
+
+        if(logger_) {
+            logger_->debug("Cache remove: " + key);
+        }
     }
 
     // Очищает весь кеш
-    void clear() { cache_.clear(); }
+    void clear() {
+        cache_.clear();
+        if(logger_) {
+            logger_->info("Cache cleared");
+        }
+    }
 
     // Возвращает количество элементов в кеше
     std::size_t size() const { return cache_.size(); }
@@ -91,11 +94,16 @@ class CalculationCache {
     void warmFromDatabase(DatabaseType& db) {
         auto calculations = db.loadAllCalculations();
 
-        for(const auto& [operand1, operation, operand2, result] : calculations) {
-            put(operand1, operation, operand2, result);
+        for(const auto& number : calculations) {
+            put(number.first, number.operation, (number.second != 0) ? std::optional<int>(number.second) : std::nullopt,
+                number.result);
         }
 
-        std::cout << "[Cache] Warmed from database: loaded " << calculations.size() << " calculations" << std::endl;
+        if(logger_) {
+            logger_->info(
+                "Cache warmed from database: loaded " + std::to_string(calculations.size()) + " calculations"
+            );
+        }
     }
 
     // Возвращает статистику кеша
@@ -105,9 +113,11 @@ class CalculationCache {
     };
 
     CacheStats getStats() const {
-        // Грубая оценка памяти: ключ + значение + накладные расходы unordered_map
-        std::size_t memory = cache_.size() * (sizeof(CacheKey) + sizeof(int) + 32);
-
+        // Более точная оценка памяти: ключ (строка)+ значение + накладные расходы unordered_map
+        std::size_t memory = 0;
+        for(const auto& [key, value] : cache_) {
+            memory += key.capacity() * sizeof(char) + sizeof(int) + 32;  // Накладные расходы
+        }
         return CacheStats{cache_.size(), memory};
     }
 };

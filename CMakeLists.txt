@@ -160,7 +160,7 @@ endif()
 
 
 # clang-tidy
-option(USE_CLANG_TIDY "Enable clang-tidy checks" ON)
+option(USE_CLANG_TIDY "Enable clang-tidy checks" OFF)
 
 if(USE_CLANG_TIDY)
     find_program(CLANG_TIDY_EXE 

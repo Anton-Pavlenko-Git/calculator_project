@@ -112,19 +112,19 @@ class PgConnection {
     }
 
     // Начинает транзакцию
-    void beginTransaction() const {
+    void beginTransaction() const noexcept {
         PGresult* res = exec("BEGIN");
         PQclear(res);
     }
 
     // Фиксирует транзакцию
-    void commit() const {
+    void commit() const noexcept {
         PGresult* res = exec("COMMIT");
         PQclear(res);
     }
 
     // Откатывает транзакцию
-    void rollback() const {
+    void rollback() const noexcept {
         PGresult* res = exec("ROLLBACK");
         PQclear(res);
     }

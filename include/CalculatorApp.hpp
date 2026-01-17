@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+// #include <memory>
 #include <string>
 
 #include "CalculatorEngine.hpp"
@@ -15,7 +15,7 @@ class CalculatorApp {
     // Констуктор с внедрением зависимости
     explicit CalculatorApp(std::shared_ptr<Logger> logger);
 
-    explicit CalculatorApp(std::shared_ptr<Logger> logger, const std::string& databaseConnectionString);
+    CalculatorApp(std::shared_ptr<Logger> logger, const std::string& databaseConnectionString);
 
     // Основной метод запуска приложения
     void run();

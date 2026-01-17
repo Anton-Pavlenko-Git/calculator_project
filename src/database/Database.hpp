@@ -1,10 +1,9 @@
 #pragma once
 
 #include <optional>
-#include <string>
-#include <tuple>
 #include <vector>
 
+#include "Number.hpp"
 #include "PgConnection.hpp"
 #include "PgResult.hpp"
 
@@ -164,9 +163,9 @@ class Database {
     }
 
     // Загружает всю историю вычислений для прогрева кеша
-    // Вектор кортежей (operand1, operation, operand2, result)
-    std::vector<std::tuple<int, std::string, std::optional<int>, int>> loadAllCalculations() {
-        std::vector<std::tuple<int, std::string, std::optional<int>, int>> history;
+    // Вектор структур Number
+    std::vector<Number> loadAllCalculations() {
+        std::vector<Number> history;
 
         const char* sql =
             "SELECT operand1, operation, operand2, result "
@@ -186,7 +185,11 @@ class Database {
             auto res = result.getInt(i, 3);
 
             if(op1 && res) {
-                history.emplace_back(*op1, operation, op2, *res);
+                if(op2.has_value()) {
+                    history.emplace_back(*op1, *op2, operation, *res);
+                } else {
+                    history.emplace_back(*op1, operation, *res);
+                }
             }
         }
 

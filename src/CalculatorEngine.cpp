@@ -8,10 +8,13 @@
 #include "CalculatorExceptions.hpp"
 
 // ========== Конструкторы ==========
-CalculatorEngine::CalculatorEngine() : cache_(nullptr), database_(nullptr) {}
+CalculatorEngine::CalculatorEngine(std::shared_ptr<Logger> logger)
+    : logger_(std::move(logger)), cache_(std::make_unique<CalculationCache>(logger_)), database_(nullptr) {}
 
-CalculatorEngine::CalculatorEngine(const std::string& connectionString)
-    : cache_(std::make_unique<CalculationCache>()), database_(std::make_unique<Database>(connectionString)) {
+CalculatorEngine::CalculatorEngine(std::shared_ptr<Logger> logger, const std::string& connectionString)
+    : logger_(std::move(logger))
+    , cache_(std::make_unique<CalculationCache>(logger_))
+    , database_(std::make_unique<Database>(connectionString)) {
     warmCache();
 }
 
@@ -111,7 +114,6 @@ int CalculatorEngine::calculateWithCache(
 }
 
 int CalculatorEngine::calculateDirectly(int operand1, const std::string& operation, int operand2) const {
-    // const std::string& oper = request.getOperation();
     if(operation == "+" || operation == "add") {
         return math_utils::add(operand1, operand2);
     }
@@ -122,7 +124,6 @@ int CalculatorEngine::calculateDirectly(int operand1, const std::string& operati
         return math_utils::multiply(operand1, operand2);
     }
     if(operation == "/" || operation == "div") {
-        //    const int second = request.getSecondOperand().value_or(0);
         if(operand2 == 0) {
             throw DivisionByZeroException();
         }
@@ -131,7 +132,6 @@ int CalculatorEngine::calculateDirectly(int operand1, const std::string& operati
     if(operation == "^" || operation == "pow") {
         return math_utils::power(operand1, operand2);
     }
-    // if(oper == "!" || oper == "fact") {
 
     throw InvalidOperationException(operation);
 }

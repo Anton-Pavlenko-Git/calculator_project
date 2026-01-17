@@ -1,9 +1,9 @@
 #pragma once
 
-#include <memory>
 #include <string>
 
 #include "CalculationRequest.hpp"
+#include "Logger.hpp"
 #include "cache/CalculationCache.hpp"
 #include "database/Database.hpp"
 
@@ -14,6 +14,7 @@ class Database;
 class CalculatorEngine {
    private:
     // Внутренние зависимости
+    std::shared_ptr<Logger> logger_;
     std::unique_ptr<CalculationCache> cache_;
     std::unique_ptr<Database> database_;
 
@@ -32,11 +33,11 @@ class CalculatorEngine {
    public:
     int calculate(const CalculationRequest& request) const;
 
-    // Конструктор по умолчанию (без БД)
-    CalculatorEngine();
+    // Конструктор с логгером (без БД)
+    explicit CalculatorEngine(std::shared_ptr<Logger> logger = nullptr);
 
     // Конструктор с БД
-    explicit CalculatorEngine(const std::string& connectionString);
+    CalculatorEngine(std::shared_ptr<Logger> logger, const std::string& connectionString);
 
     ~CalculatorEngine() noexcept = default;
 

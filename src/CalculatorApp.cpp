@@ -7,7 +7,7 @@
 
 // Конструктор без БД (для обратной совместимости)
 CalculatorApp::CalculatorApp(std::shared_ptr<Logger> logger)
-    : logger_(std::move(logger)), engine_(std::make_unique<CalculatorEngine>()) {
+    : logger_(std::move(logger)), engine_(std::make_unique<CalculatorEngine>(logger_)) {
     if(!logger_) {
         throw std::invalid_argument("Logger cannot be null");
     }
@@ -15,7 +15,7 @@ CalculatorApp::CalculatorApp(std::shared_ptr<Logger> logger)
 
 // Конструктор с БД
 CalculatorApp::CalculatorApp(std::shared_ptr<Logger> logger, const std::string& databaseConnectionString)
-    : logger_(std::move(logger)), engine_(std::make_unique<CalculatorEngine>(databaseConnectionString)) {
+    : logger_(std::move(logger)), engine_(std::make_unique<CalculatorEngine>(logger_, databaseConnectionString)) {
     if(!logger_) {
         throw std::invalid_argument("Logger cannot be null");
     }
@@ -30,9 +30,9 @@ void CalculatorApp::run() {
     printHelp();
 
     if(engine_->hasDatabase()) {
-        std::cout << "Database: CONNECTED (caching enabled)" << '\n';
+        logger_->info("Database: CONNECTED (caching enabled)");
     } else {
-        std::cout << "Database: NOT CONNECTED (no caching)" << '\n';
+        logger_->info("Database: NOT CONNECTED (no caching)");
     }
 
     std::string line;
