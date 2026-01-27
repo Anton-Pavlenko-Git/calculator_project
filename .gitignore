@@ -6,6 +6,8 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 *.cmake
+perf.data
+valgrind_calculator.log
 
 calculator
 
@@ -14,6 +16,7 @@ calculator
 **/.vscode/
 **/.idea/
 Testing/
+tests/performance_benchmark.cpp
 *.swp
 *.swo
 

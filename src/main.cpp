@@ -1,16 +1,17 @@
 #include <iostream>
-#include <memory>
 
 #include "CalculatorApp.hpp"
-#include "Logger.hpp"
 
 int main() {
     try {
         // 1. Создаем логгер
         auto logger = Logger::create();
 
+        // Всегда используем БД (для демонстрации работы)
+        std::string connStr = "host=localhost dbname=calculator_db user=anton password=passWord";
+
         // 2. Создаем приложение с внедренным логгером
-        CalculatorApp app(logger);
+        CalculatorApp app(logger, connStr);
 
         // 3. Запускаем приложение
         app.run();
