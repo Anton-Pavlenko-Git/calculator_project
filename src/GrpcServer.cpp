@@ -118,8 +118,8 @@ void GrpcServer::stop(bool graceful) {
     }
 }
 
-bool GrpcServer::isRunning() const { return running_.load() && server_ != nullptr; }
+bool GrpcServer::isRunning() const noexcept { return running_.load() && server_ != nullptr; }
 
-std::string GrpcServer::getAddress() const { return address_; }
+std::string GrpcServer::getAddress() const noexcept { return address_; }
 
 }  // namespace calculator

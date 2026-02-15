@@ -39,7 +39,7 @@ ApplicationRunner::Config ApplicationRunner::parseArguments(int argc, char* argv
     return config;
 }
 
-void ApplicationRunner::showHelp(const char* program_name) {
+void ApplicationRunner::showHelp(const char* program_name) noexcept {
     std::cout << "Calculator gRPC Service\n"
               << "Usage: " << program_name << " [OPTIONS]\n\n"
               << "Options:\n"
@@ -52,7 +52,7 @@ void ApplicationRunner::showHelp(const char* program_name) {
 int ApplicationRunner::run(const Config& config) {
     try {
         auto logger = Logger::create();
-        std::string connStr = "host=localhost dbname=calculator_db user=anton password=passWord";
+        std::string connStr = "host=localhost dbname=calculator_db user=anton password=12131";
 
         // Демонизация:
         // - Не вызываем Daemon::daemonize() при запуске через systemd

@@ -46,7 +46,7 @@ class GrpcServer {
     void stop(bool graceful = true);
 
     // Проверка, запущен ли сервер
-    bool isRunning() const;
+    bool isRunning() const noexcept;
 
     // Получение адреса сервера
     std::string getAddress() const noexcept;
