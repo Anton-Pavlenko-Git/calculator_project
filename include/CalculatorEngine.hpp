@@ -31,7 +31,7 @@ class CalculatorEngine {
     int calculateWithCache(int operand1, const std::string& operation, std::optional<int> operand2) const;
 
    public:
-    int calculate(const CalculationRequest& request) const;
+    int calculate(const ::CalculationRequest& request) const;
 
     // Конструктор с логгером (без БД)
     explicit CalculatorEngine(std::shared_ptr<Logger> logger = nullptr);
