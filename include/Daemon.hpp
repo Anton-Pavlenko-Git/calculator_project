@@ -68,7 +68,7 @@ class Daemon {
     std::shared_ptr<Logger> logger_;
     std::atomic<bool> running_{false};
     std::atomic<bool> shutdown_requested_{false};
-    std::unique_ptr<std::thread> signal_thread_;
+    std::thread signal_thread_;
     std::unordered_map<int, SignalCallback> signal_handlers_;
 
     // Основной цикл обработки сигналов

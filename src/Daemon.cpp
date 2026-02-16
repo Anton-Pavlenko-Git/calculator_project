@@ -26,9 +26,8 @@ Daemon::Daemon(Daemon&& other) noexcept
     : logger_(std::move(other.logger_))
     , running_(other.running_.load())
     , shutdown_requested_(other.shutdown_requested_.load())
+    , signal_thread_(std::move(other.signal_thread_))
     , signal_handlers_(std::move(other.signal_handlers_)) {
-    signal_thread_ = std::move(other.signal_thread_);
-
     // Сбрасываем состояние у перемещаемого объекта
     other.running_.store(false);
     other.shutdown_requested_.store(false);
@@ -45,6 +44,12 @@ Daemon& Daemon::operator=(Daemon&& other) noexcept {
         logger_ = std::move(other.logger_);
         running_.store(other.running_.load());
         shutdown_requested_.store(other.shutdown_requested_.load());
+
+        // Если текущий поток присоединяем или отсоединяем перед перемещением
+        if(signal_thread_.joinable()) {
+            signal_thread_.join();
+        }
+
         signal_thread_ = std::move(other.signal_thread_);
         signal_handlers_ = std::move(other.signal_handlers_);
 
@@ -68,7 +73,7 @@ void Daemon::start() {
     shutdown_requested_.store(false);
 
     // Запускаем поток обработки сигналов
-    signal_thread_ = std::make_unique<std::thread>(&Daemon::signalProcessingLoop, this);
+    signal_thread_ = std::thread(&Daemon::signalProcessingLoop, this);
 
     logger_->info("Daemon started successfully");
 }
@@ -84,13 +89,12 @@ void Daemon::stop() noexcept {
     shutdown_requested_.store(true);
 
     // Если поток обработки сигналов работает, отправляем SIGUSR1 для пробуждения
-    if(signal_thread_ && signal_thread_->joinable()) {
+    if(signal_thread_.joinable()) {
         // Отправляем сигнал для пробуждения sigwait()
-        pthread_kill(signal_thread_->native_handle(), SIGUSR1);
+        pthread_kill(signal_thread_.native_handle(), SIGUSR1);
 
         // Ждем завершения потока
-        signal_thread_->join();
-        signal_thread_.reset();
+        signal_thread_.join();
     }
 
     logger_->info("Daemon stopped");

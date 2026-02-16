@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wextra -Wpedan
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 # Опция для включения ThreadSanitizer (по умолчанию выключена)
-option(ENABLE_THREAD_SANITIZER "Enable ThreadSanitizer for debugging" ON)
+option(ENABLE_THREAD_SANITIZER "Enable ThreadSanitizer for debugging" OFF)
 
 if(ENABLE_THREAD_SANITIZER)
     message(STATUS "ThreadSanitizer is ENABLED. Performance will be significantly slower.")
@@ -146,7 +146,7 @@ add_executable(calculator
     src/CalculatorEngine.cpp
     src/Logger.cpp
     src/CalculatorApp.cpp
-    src/CalculatorExceptions.cpp  
+    src/CalculatorExceptions.cpp
     src/CalculatorServiceImpl.cpp
     src/GrpcServer.cpp
     ${PROTO_GENERATED_FILES}
