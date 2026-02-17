@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package calculator;
+
+// Сервис калькулятора
+service Calculator {
+    // Базовое вычисление
+    rpc Calculate (CalculationRequest) returns (CalculationResponse) {}
+    
+    // Получение статистики
+    rpc GetStatistics (StatisticsRequest) returns (StatisticsResponse) {}
+    
+    // Проверка здоровья
+    rpc HealthCheck (HealthRequest) returns (HealthResponse) {}
+}
+
+// Запрос на вычисление
+message CalculationRequest {
+    int32 operand1 = 1;
+    string operation = 2;
+    int32 operand2 = 3;
+}
+
+// Ответ с результатом
+message CalculationResponse {
+    int32 result = 1;
+    bool from_cache = 2;
+    bool from_database = 3;
+    string error = 4;  // Если ошибка
+}
+
+// Запрос статистики
+message StatisticsRequest {
+    // Пустой запрос
+}
+
+// Ответ со статистикой
+message StatisticsResponse {
+    int64 total_calculations = 1;
+    int64 cache_hits = 2;
+    int64 database_hits = 3;
+    int32 cache_size = 4;
+    double cache_hit_rate = 5;
+    double database_hit_rate = 6;
+}
+
+// Запрос проверки здоровья
+message HealthRequest {
+    // Пустой запрос
+}
+
+// Ответ о здоровье
+message HealthResponse {
+    bool healthy = 1;
+    string status = 2;
+    int64 uptime_seconds = 3;
+}

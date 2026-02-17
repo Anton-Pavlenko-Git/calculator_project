@@ -16,7 +16,7 @@ class CalculatorAppWithDBTest : public ::testing::Test {
         logger = Logger::create();
 
         // Используем существующую БД calculator_db
-        std::string connStr = "host=localhost dbname=calculator_db user=anton password=passWord";
+        std::string connStr = "host=localhost dbname=calculator_db user=anton password=12131";
 
         try {
             app = std::make_unique<CalculatorApp>(logger, connStr);
@@ -57,7 +57,7 @@ TEST_F(CalculatorAppWithDBTest, DatabasePersistence) {
     EXPECT_EQ(app->calculate(R"({"operand1": 100, "operation": "+", "operand2": 200})"), "300");
 
     // Пересоздаем приложение (имитация перезапуска)
-    std::string connStr = "host=localhost dbname=calculator_db user=anton password=passWord";
+    std::string connStr = "host=localhost dbname=calculator_db user=anton password=12131";
     auto newApp = std::make_unique<CalculatorApp>(logger, connStr);
 }
 

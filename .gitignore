@@ -15,6 +15,7 @@ calculator
 *.bak
 **/.vscode/
 **/.idea/
+install/
 Testing/
 tests/performance_benchmark.cpp
 *.swp

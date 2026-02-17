@@ -1,0 +1,26 @@
+[Unit]
+Description=Calculator gRPC Service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=calculator-service
+Group=calculator-service
+ExecStart=/usr/local/bin/calculator-service --grpc --daemon
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=calculator-service
+
+# Безопасность
+NoNewPrivileges=true
+ProtectSystem=strict
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ReadWritePaths=/var/log/calculator
+
+[Install]
+WantedBy=multi-user.target
